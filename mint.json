@@ -7,9 +7,9 @@
   },
   "favicon": "/favicon.svg",
   "colors": {
-    "primary": "#0D9373",
-    "light": "#07C983",
-    "dark": "#0D9373",
+    "primary": "#FF4FA6",
+    "light": "#655CFE",
+    "dark": "#FF4FA6",
     "anchors": {
       "from": "#0D9373",
       "to": "#07C983"
@@ -25,17 +25,11 @@
     "name": "Dashboard",
     "url": "https://dashboard.mintlify.com"
   },
-  "tabs": [
-    {
-      "name": "API Reference",
-      "url": "api-reference"
-    }
-  ],
   "anchors": [
     {
-      "name": "Documentation",
-      "icon": "book-open-cover",
-      "url": "https://mintlify.com/docs"
+      "name": "API Reference",
+      "icon": "code",
+      "url": "api-reference"
     },
     {
       "name": "Community",
@@ -75,11 +69,14 @@
       ]
     },
     {
-      "group": "Endpoint Examples",
+      "group": "Contacts",
       "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        "api-reference/contacts/get_list",
+        "api-reference/contacts/get",
+        "api-reference/contacts/create",
+        "api-reference/contacts/import",
+        "api-reference/contacts/update",
+        "api-reference/contacts/call"
       ]
     }
   ],
