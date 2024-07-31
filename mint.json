@@ -62,12 +62,20 @@
     {
       "group": "Contacts",
       "pages": [
-        "api-reference/contacts/get_list",
+        "api-reference/contacts/list",
         "api-reference/contacts/get",
         "api-reference/contacts/create",
         "api-reference/contacts/import",
         "api-reference/contacts/update",
         "api-reference/contacts/call"
+      ]
+    },
+    {
+      "group": "Calls",
+      "pages": [
+        "api-reference/calls/list",
+        "api-reference/calls/get",
+        "api-reference/calls/create"
       ]
     }
   ],

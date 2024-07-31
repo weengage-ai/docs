@@ -25,7 +25,9 @@
             "description": "Maximum number of contacts to return",
             "required": false,
             "schema": {
-              "type": "integer"
+              "maximum": 100,
+              "type": "integer",
+              "default": 25
             },
             "example": 25
           },
@@ -35,7 +37,8 @@
             "description": "Number of contacts to skip",
             "required": false,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "default": 0
             },
             "example": 25
           },
@@ -51,19 +54,6 @@
           }
         ],
         "responses": {
-          "400": {
-            "description": "Bad Request - Tag not found",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ContactResponse"
-                  }
-                }
-              }
-            }
-          },
           "200": {
             "description": "OK",
             "content": {
@@ -76,13 +66,11 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request"
           }
-        },
-        "security": [
-          {
-            "apiKey": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -111,12 +99,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "apiKey": []
-          }
-        ]
+        }
       }
     },
     "/v1/contacts/{contactId}/call": {
@@ -148,15 +131,10 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Call created successfully"
           }
-        },
-        "security": [
-          {
-            "apiKey": []
-          }
-        ]
+        }
       }
     },
     "/v1/contacts/import": {
@@ -190,6 +168,85 @@
               }
             }
           }
+        }
+      }
+    },
+    "/v1/calls": {
+      "get": {
+        "tags": [
+          "Call"
+        ],
+        "summary": "List all calls",
+        "operationId": "listCalls",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of calls to return",
+            "required": false,
+            "schema": {
+              "maximum": 100,
+              "type": "integer",
+              "default": 25
+            },
+            "example": 25
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of calls to skip",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0
+            },
+            "example": 25
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CallResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Call"
+        ],
+        "summary": "Creates a new call",
+        "operationId": "createCall",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCallRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Call created successfully"
+          }
         },
         "security": [
           {
@@ -219,6 +276,9 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "The contact with given Id was not found."
+          },
           "200": {
             "description": "OK",
             "content": {
@@ -228,16 +288,8 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "The contact with given Id was not found."
           }
-        },
-        "security": [
-          {
-            "apiKey": []
-          }
-        ]
+        }
       },
       "patch": {
         "tags": [
@@ -268,6 +320,9 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "The contact with given Id was not found."
+          },
           "200": {
             "description": "OK",
             "content": {
@@ -277,9 +332,43 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/v1/calls/{callId}": {
+      "get": {
+        "tags": [
+          "Call"
+        ],
+        "summary": "Retrieve call by ID",
+        "operationId": "callById",
+        "parameters": [
+          {
+            "name": "callId",
+            "in": "path",
+            "description": "ID of the call to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "05673a94-fc5a-43f2-af50-a8f687132d74"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CallResponse"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The contact with given Id was not found."
+            "description": "The call with given Id was not found."
           }
         },
         "security": [
@@ -346,6 +435,7 @@
         "properties": {
           "agentId": {
             "type": "string",
+            "description": "ID of the agent to use for the call",
             "format": "uuid"
           }
         }
@@ -361,6 +451,24 @@
             "items": {
               "$ref": "#/components/schemas/CreateContactRequest"
             }
+          }
+        }
+      },
+      "CreateCallRequest": {
+        "required": [
+          "agentId"
+        ],
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string",
+            "description": "Phone number to call, in the E.164 international standard format",
+            "example": "+33612345678"
+          },
+          "agentId": {
+            "type": "string",
+            "description": "ID of the agent to use for the call",
+            "format": "uuid"
           }
         }
       },
@@ -383,12 +491,128 @@
             "type": "string"
           }
         }
+      },
+      "CallResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the call",
+            "format": "uuid"
+          },
+          "agentId": {
+            "type": "string",
+            "description": "Unique identifier of the agent",
+            "format": "uuid"
+          },
+          "contactId": {
+            "type": "string",
+            "description": "Unique identifier of the contact",
+            "format": "uuid"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number of the other party, in the E.164 international standard format",
+            "example": "+33612345678"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the call",
+            "enum": [
+              "INBOUND",
+              "OUTBOUND"
+            ]
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Duration of the call in seconds",
+            "format": "int64",
+            "example": 360
+          },
+          "startTime": {
+            "type": "string",
+            "description": "Start time of the call",
+            "format": "date-time",
+            "example": "2024-07-30T14:35:00Z"
+          },
+          "endTime": {
+            "type": "string",
+            "description": "End time of the call",
+            "format": "date-time",
+            "example": "2024-07-30T14:41:00Z"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status of the call",
+            "enum": [
+              "UNKNOWN",
+              "IN_PROGRESS",
+              "CANCELED",
+              "COMPLETED",
+              "NO_ANSWER",
+              "VOICE_BOX",
+              "UNREACHABLE",
+              "FAILED",
+              "TRANSFERRED"
+            ]
+          },
+          "extractors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "description": "Result of the extractors",
+              "example": {
+                "customer": {
+                  "firstname": "firstname",
+                  "lastname": "lastname",
+                  "address": "address"
+                },
+                "example": "example"
+              }
+            },
+            "description": "Result of the extractors",
+            "example": {
+              "customer": {
+                "firstname": "firstname",
+                "lastname": "lastname",
+                "address": "address"
+              },
+              "example": "example"
+            }
+          },
+          "classifiers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "description": "Result of the classifiers",
+              "example": {
+                "Customer's request": "Refund"
+              }
+            },
+            "description": "Result of the classifiers",
+            "example": {
+              "Customer's request": "Refund"
+            }
+          },
+          "summary": {
+            "type": "string",
+            "description": "Summary of what happened during the call",
+            "example": "Discussed project requirements and next steps."
+          },
+          "created": {
+            "type": "string",
+            "description": "Timestamp when the call record was created",
+            "format": "date-time",
+            "example": "2024-07-30T14:45:00Z"
+          }
+        }
       }
     },
     "securitySchemes": {
       "apiKey": {
         "type": "apiKey",
-        "name": "X-API-Key",
+        "description": "Your API key.",
+        "name": "X-Api-Key",
         "in": "header"
       }
     }
