@@ -55,7 +55,8 @@
     {
       "group": "API Documentation",
       "pages": [
-        "api-reference/authentication"
+        "api-reference/authentication",
+        "api-reference/rate-limits"
       ]
     },
     {
