@@ -20,10 +20,26 @@
         "operationId": "listContacts",
         "parameters": [
           {
+            "name": "searchParams",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ContactSearchParams"
+            }
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "description": "Filter contacts by tag",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Import_123"
+          },
+          {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of contacts to return",
-            "required": false,
+            "description": "Number of contacts to return",
             "schema": {
               "maximum": 100,
               "type": "integer",
@@ -35,22 +51,20 @@
             "name": "offset",
             "in": "query",
             "description": "Number of contacts to skip",
-            "required": false,
             "schema": {
               "type": "integer",
               "default": 0
             },
-            "example": 25
+            "example": 1
           },
           {
-            "name": "tag",
+            "name": "sort",
             "in": "query",
-            "description": "Filter contacts by tag",
-            "required": false,
+            "description": "Sorting property and direction",
             "schema": {
               "type": "string"
             },
-            "example": "Import_123"
+            "example": "firstName,DESC"
           }
         ],
         "responses": {
@@ -68,9 +82,31 @@
             }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -98,8 +134,33 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
       }
     },
     "/v1/contacts/{contactId}/call": {
@@ -133,8 +194,36 @@
         "responses": {
           "201": {
             "description": "Call created successfully"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The contact with given Id was not found."
           }
-        }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
       }
     },
     "/v1/contacts/import": {
@@ -167,8 +256,33 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
       }
     },
     "/v1/calls": {
@@ -180,10 +294,17 @@
         "operationId": "listCalls",
         "parameters": [
           {
+            "name": "callSearchParams",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CallSearchParams"
+            }
+          },
+          {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of calls to return",
-            "required": false,
+            "description": "Number of contacts to return",
             "schema": {
               "maximum": 100,
               "type": "integer",
@@ -194,13 +315,21 @@
           {
             "name": "offset",
             "in": "query",
-            "description": "Number of calls to skip",
-            "required": false,
+            "description": "Number of contacts to skip",
             "schema": {
               "type": "integer",
               "default": 0
             },
-            "example": 25
+            "example": 1
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting property and direction",
+            "schema": {
+              "type": "string"
+            },
+            "example": "type,DESC"
           }
         ],
         "responses": {
@@ -218,7 +347,24 @@
             }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -246,6 +392,26 @@
         "responses": {
           "201": {
             "description": "Call created successfully"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -276,9 +442,6 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "The contact with given Id was not found."
-          },
           "200": {
             "description": "OK",
             "content": {
@@ -288,8 +451,36 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The contact with given Id was not found"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
       },
       "patch": {
         "tags": [
@@ -320,9 +511,6 @@
           "required": true
         },
         "responses": {
-          "404": {
-            "description": "The contact with given Id was not found."
-          },
           "200": {
             "description": "OK",
             "content": {
@@ -332,8 +520,36 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The contact with given Id was not found."
           }
-        }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
       }
     },
     "/v1/calls/{callId}": {
@@ -367,8 +583,28 @@
               }
             }
           },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "404": {
-            "description": "The call with given Id was not found."
+            "description": "The call with given Id was not found"
           }
         },
         "security": [
@@ -381,6 +617,58 @@
   },
   "components": {
     "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "description": "Date and time when the error occurs at UTC time in format 'yyyy-MM-dd'T'HH:mm:ss.SSS'Z''",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "integer",
+            "description": "Http status code",
+            "format": "int32"
+          },
+          "field": {
+            "type": "string",
+            "description": "Field in error"
+          },
+          "rejectedValue": {
+            "type": "object",
+            "description": "Value in error"
+          },
+          "message": {
+            "type": "string",
+            "description": "Information about the error"
+          },
+          "errors": {
+            "type": "array",
+            "description": "List of specific validation errors",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "Field in error"
+          },
+          "rejectedValue": {
+            "type": "object",
+            "description": "Value in error"
+          },
+          "message": {
+            "type": "string",
+            "description": "Description of the failed validation"
+          }
+        },
+        "description": "List of specific validation errors"
+      },
       "CreateContactRequest": {
         "required": [
           "firstName",
@@ -489,6 +777,35 @@
           },
           "customId": {
             "type": "string"
+          }
+        }
+      },
+      "ContactSearchParams": {
+        "type": "object",
+        "properties": {
+          "tag": {
+            "type": "string"
+          }
+        }
+      },
+      "CallSearchParams": {
+        "type": "object",
+        "properties": {
+          "agentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "campaignId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
           }
         }
       },
