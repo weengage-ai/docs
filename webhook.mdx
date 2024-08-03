@@ -10,7 +10,9 @@ Set up custom automations on your side when you receive webhook events from Volu
 
 Give the `Webhook URL` you want Volubile to notify to in [Integration Settings](https://eu.volubile.ai/settings/integration)
 
-Once your call complete or fails, a `POST` request will be sent to your `Webhook URL`with the detail of the completed call :
+## Webhook payload
+
+Once your call complete or fails, a `POST` request will be sent to your `Webhook URL`with the detail of the completed call.
 
 ```json
 {
@@ -39,6 +41,66 @@ Once your call complete or fails, a `POST` request will be sent to your `Webhook
 }
 ```
 
-### Secure webhook
+### Securing webhook
 
-TODO
+You can choose to enable security on webhook in by generating a secret in [Integration Settings](https://eu.volubile.ai/settings/integration).
+
+In this case we will send an `X-Webhook-Signature` in the request headers to your `Webhook URL` allowing you to check the payload came from Volubile.
+
+See below for sample logic for how to verify `HMAC signature` :
+
+<CodeGroup>
+
+```java Java
+import org.apache.commons.codec.binary.Hex
+import java.security.InvalidKeyException
+import java.security.NoSuchAlgorithmException
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
+...
+
+final var SECRET_KEY = "{volubile-webhook-secret}";
+
+final var payload = """
+{
+    "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+    "agentId": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+    "type": "INBOUND",
+    ...
+}
+""";
+
+try {
+    final var mac = Mac.getInstance("HmacSHA256");
+    mac.init(new SecretKeySpec(secret.getBytes(), "HmacSHA256"));
+    final byte[] rawHmac = mac.doFinal(payload.getBytes());
+    final byte[] hexBytes = new Hex().encode(rawHmac);
+
+    final var signature = String(hexBytes, UTF_8);
+    ...
+} catch (final NoSuchAlgorithmException | InvalidKeyException e) {
+    logger.error("Error occurred!");
+}
+```
+
+```typescript Typescript
+const crypto = require("crypto");
+
+const SECRET_KEY = "{volubile-webhook-secret}";
+
+const payload = JSON.stringify({
+    "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+    "agentId": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+    "type": "INBOUND",
+    ...
+});
+
+const signature = crypto
+    .createHmac("sha256", SECRET_KEY)
+    .update(payload, "utf-8")
+    .digest("hex");
+
+...
+```
+
+</CodeGroup>
