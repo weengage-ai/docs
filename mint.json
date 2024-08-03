@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
+  "name": "Documentation",
   "logo": {
     "dark": "/logo/dark.svg",
     "light": "/logo/light.svg"
@@ -18,7 +18,7 @@
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:support@volubile.com"
+      "url": "mailto:support@volubile.ai"
     }
   ],
   "topbarCtaButton": {
@@ -30,33 +30,31 @@
       "name": "API Reference",
       "icon": "code",
       "url": "api-reference"
+    },
+    {
+      "name": "Webhook",
+      "icon": "webhook",
+      "url": "webhook"
+    },
+    {
+      "name": "Contact us",
+      "icon": "envelope",
+      "url": "https://volubile.ai/contact"
     }
   ],
   "navigation": [
     {
       "group": "Get Started",
       "pages": [
-        "introduction",
-        "quickstart",
-        "development"
-      ]
-    },
-    {
-      "group": "Essentials",
-      "pages": [
-        "essentials/markdown",
-        "essentials/code",
-        "essentials/images",
-        "essentials/settings",
-        "essentials/navigation",
-        "essentials/reusable-snippets"
+        "welcome",
+        "webhook"
       ]
     },
     {
       "group": "API Documentation",
       "pages": [
         "api-reference/authentication",
-        "api-reference/rate-limits"
+        "api-reference/rate-limiting"
       ]
     },
     {

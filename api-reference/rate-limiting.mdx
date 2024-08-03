@@ -1,8 +1,14 @@
 ---
-title: 'Rate limits'
+title: 'Rate limiting'
 ---
 
 The Volubile API is rate-limited to prevent abuse and ensure fair usage across all clients. The rate limit is enforced on a per-account basis, with a fixed window of time and a maximum number of requests allowed within that window.
+
+Currently all endpoints are rate limited by the following :
+
+- API Key, and is limited to __100 requests per 15 seconds__.
+
+## Rate Limit Response
 
 Those headers are sent back with every API response:
 

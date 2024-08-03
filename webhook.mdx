@@ -1,0 +1,44 @@
+---
+title: 'Webhook'
+description: 'Webhooks provide immediate notifications upon the completion of your phone calls.'
+icon: 'webhook'
+---
+
+Set up custom automations on your side when you receive webhook events from Volubile.
+
+## Configure webhook
+
+Give the `Webhook URL` you want Volubile to notify to in [Integration Settings](https://eu.volubile.ai/settings/integration)
+
+Once your call complete or fails, a `POST` request will be sent to your `Webhook URL`with the detail of the completed call :
+
+```json
+{
+  "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+  "agentId": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+  "contactId": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+  "phone": "+33612345678",
+  "type": "INBOUND",
+  "duration": 360,
+  "startTime": "2024-07-30T14:35:00Z",
+  "endTime": "2024-07-30T14:41:00Z",
+  "status": "UNKNOWN",
+  "extractors": {
+    "customer": {
+      "firstname": "firstname",
+      "lastname": "lastname",
+      "address": "address"
+    },
+    "example": "example"
+  },
+  "classifiers": {
+    "Customer's request": "Refund"
+  },
+  "summary": "Discussed project requirements and next steps.",
+  "created": "2024-07-30T14:45:00Z"
+}
+```
+
+### Secure webhook
+
+TODO
