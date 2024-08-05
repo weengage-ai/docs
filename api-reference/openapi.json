@@ -20,17 +20,10 @@
         "operationId": "listContacts",
         "parameters": [
           {
-            "name": "searchParams",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ContactSearchParams"
-            }
-          },
-          {
             "name": "tag",
             "in": "query",
             "description": "Filter contacts by tag",
+            "required": false,
             "schema": {
               "type": "string"
             },
@@ -68,19 +61,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ContactResponse"
-                  }
-                }
-              }
-            }
-          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -97,6 +77,19 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContactResponse"
+                  }
                 }
               }
             }
@@ -125,6 +118,26 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "201": {
             "description": "Contact created successfully",
             "content": {
@@ -192,6 +205,29 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The contact with given Id was not found."
+          },
           "201": {
             "description": "Call created successfully"
           },
@@ -244,6 +280,26 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "201": {
             "description": "Created",
             "content": {
@@ -285,6 +341,62 @@
         ]
       }
     },
+    "/v1/campaigns": {
+      "post": {
+        "tags": [
+          "Campaigns"
+        ],
+        "summary": "Creates a new campaign",
+        "operationId": "create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCampaignRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
     "/v1/calls": {
       "get": {
         "tags": [
@@ -294,11 +406,39 @@
         "operationId": "listCalls",
         "parameters": [
           {
-            "name": "callSearchParams",
+            "name": "agentId",
             "in": "query",
-            "required": true,
+            "required": false,
             "schema": {
-              "$ref": "#/components/schemas/CallSearchParams"
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "campaignId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
             }
           },
           {
@@ -333,19 +473,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CallResponse"
-                  }
-                }
-              }
-            }
-          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -362,6 +489,19 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CallResponse"
+                  }
                 }
               }
             }
@@ -390,6 +530,26 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "201": {
             "description": "Call created successfully"
           },
@@ -442,16 +602,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ContactResponse"
-                }
-              }
-            }
-          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -468,6 +618,16 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactResponse"
                 }
               }
             }
@@ -511,6 +671,29 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The contact with given Id was not found."
+          },
           "200": {
             "description": "OK",
             "content": {
@@ -552,6 +735,66 @@
         ]
       }
     },
+    "/v1/campaigns/{campaignId}": {
+      "get": {
+        "tags": [
+          "Campaigns"
+        ],
+        "summary": "Retrieve campaign by ID",
+        "operationId": "campaignById",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The campaign with given Id was not found."
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
     "/v1/calls/{callId}": {
       "get": {
         "tags": [
@@ -573,6 +816,26 @@
           }
         ],
         "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "200": {
             "description": "OK",
             "content": {
@@ -671,8 +934,6 @@
       },
       "CreateContactRequest": {
         "required": [
-          "firstName",
-          "lastName",
           "phone"
         ],
         "type": "object",
@@ -687,9 +948,6 @@
             "type": "string"
           },
           "email": {
-            "type": "string"
-          },
-          "customId": {
             "type": "string"
           }
         }
@@ -711,9 +969,6 @@
             "type": "string"
           },
           "email": {
-            "type": "string"
-          },
-          "customId": {
             "type": "string"
           }
         }
@@ -738,6 +993,176 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/CreateContactRequest"
+            }
+          }
+        }
+      },
+      "CreateCampaignRequest": {
+        "required": [
+          "agentId",
+          "days",
+          "name",
+          "startTime"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the campaign"
+          },
+          "agentId": {
+            "type": "string",
+            "description": "Unique identifier of the agent to perform the campaign with",
+            "format": "uuid"
+          },
+          "startTime": {
+            "type": "string",
+            "description": "Start date of the campaign",
+            "format": "date-time"
+          },
+          "timeSlots": {
+            "type": "array",
+            "description": "Timeslots of the campaign (when the calls will be performed during the day). Max 2 timeslots",
+            "items": {
+              "$ref": "#/components/schemas/TimeSlot"
+            }
+          },
+          "batchSize": {
+            "type": "integer",
+            "description": "The number of calls per...",
+            "format": "int32"
+          },
+          "retry": {
+            "$ref": "#/components/schemas/Retry"
+          },
+          "contactImportTag": {
+            "type": "string",
+            "description": "Tag name for the contacts import"
+          },
+          "contacts": {
+            "type": "array",
+            "description": "List of contacts to call during the campaign",
+            "items": {
+              "$ref": "#/components/schemas/CreateContactRequest"
+            }
+          },
+          "days": {
+            "type": "array",
+            "description": "Days of the campaign",
+            "items": {
+              "type": "string",
+              "description": "Days of the campaign",
+              "enum": [
+                "MONDAY",
+                "TUESDAY",
+                "WEDNESDAY",
+                "THURSDAY",
+                "FRIDAY",
+                "SATURDAY",
+                "SUNDAY"
+              ]
+            }
+          }
+        }
+      },
+      "Retry": {
+        "type": "object",
+        "properties": {
+          "max": {
+            "maximum": 3,
+            "minimum": 0,
+            "type": "integer",
+            "description": "Maximum number of calls to try to reach the contact",
+            "format": "int32"
+          },
+          "delay": {
+            "type": "integer",
+            "description": "Minimum delay before calling again",
+            "format": "int32"
+          },
+          "retryOn": {
+            "type": "array",
+            "description": "Condition to trigger a retry",
+            "items": {
+              "type": "string",
+              "description": "Condition to trigger a retry"
+            }
+          }
+        },
+        "description": "Retry parameters when the contact cannot be reached"
+      },
+      "TimeSlot": {
+        "required": [
+          "endTime",
+          "startTime"
+        ],
+        "type": "object",
+        "properties": {
+          "startTime": {
+            "type": "string",
+            "description": "Start of the time slot, pattern = \"HH:mm\"",
+            "example": "10:30"
+          },
+          "endTime": {
+            "type": "string",
+            "description": "Start of the time slot, pattern = \"HH:mm\"",
+            "example": "12:30"
+          }
+        },
+        "description": "Timeslots of the campaign (when the calls will be performed during the day). Max 2 timeslots"
+      },
+      "CampaignResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the campaign",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the campaign"
+          },
+          "agentId": {
+            "type": "string",
+            "description": "Unique identifier of the agent to perform the campaign with",
+            "format": "uuid"
+          },
+          "startTime": {
+            "type": "string",
+            "description": "Start date of the campaign",
+            "format": "date-time"
+          },
+          "timeSlots": {
+            "type": "array",
+            "description": "Timeslots of the campaign (when the calls will be performed during the day). Max 2 timeslots",
+            "items": {
+              "$ref": "#/components/schemas/TimeSlot"
+            }
+          },
+          "batchSize": {
+            "type": "integer",
+            "description": "The number of calls per...",
+            "format": "int32"
+          },
+          "retry": {
+            "$ref": "#/components/schemas/Retry"
+          },
+          "days": {
+            "type": "array",
+            "description": "Days of the campaign",
+            "items": {
+              "type": "string",
+              "description": "Days of the campaign",
+              "enum": [
+                "MONDAY",
+                "TUESDAY",
+                "WEDNESDAY",
+                "THURSDAY",
+                "FRIDAY",
+                "SATURDAY",
+                "SUNDAY"
+              ]
             }
           }
         }
@@ -773,9 +1198,6 @@
             "type": "string"
           },
           "email": {
-            "type": "string"
-          },
-          "customId": {
             "type": "string"
           }
         }

@@ -75,6 +75,13 @@
         "api-reference/calls/get",
         "api-reference/calls/create"
       ]
+    },
+    {
+      "group": "Campaigns",
+      "pages": [
+        "api-reference/campaigns/get",
+        "api-reference/campaigns/create"
+      ]
     }
   ],
   "footerSocials": {
