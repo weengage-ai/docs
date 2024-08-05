@@ -2,12 +2,14 @@
 title: 'Authentication'
 ---
 
-All API endpoints are authenticated using API Keys available in [Integration Settings](https://eu.volubile.ai/settings/integration) as Bearer token in the `X-Api-Key` header:
+All API endpoints require authentication using API Keys. To authenticate your requests:
+1. Obtain your API Key from the [Integration Settings](https://eu.volubile.ai/settings/integration) page.
+2. Include this key in the `X-Api-Key` header of your HTTP request:
 
 ```
 X-Api-Key: {volubile-api-key}
 ```
 
-## Rotate API Keys
+## API Key Rotation
 
-Volubile gives access to a pair of api keys enabling you to manage a regular rotation or replace a leaked key.
+Volubile provides a pair of api keys enabling you to manage a regular rotation or replace a potentially compromised key.

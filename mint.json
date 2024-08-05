@@ -32,9 +32,9 @@
       "url": "api-reference"
     },
     {
-      "name": "Webhook",
+      "name": "Webhooks",
       "icon": "webhook",
-      "url": "webhook"
+      "url": "webhooks"
     },
     {
       "name": "Contact us",
@@ -46,8 +46,13 @@
     {
       "group": "Get Started",
       "pages": [
-        "welcome",
-        "webhook"
+        "welcome"
+      ]
+    },
+    {
+      "group": "Webhooks",
+      "pages": [
+        "webhooks/webhook"
       ]
     },
     {
