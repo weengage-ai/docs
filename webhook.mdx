@@ -1,18 +1,18 @@
 ---
 title: 'Webhook'
-description: 'Webhooks provide immediate notifications upon the completion of your phone calls.'
+description: 'Webhooks provide instant notifications when your phone calls are completed.'
 icon: 'webhook'
 ---
 
-Set up custom automations on your side when you receive webhook events from Volubile.
+Set up custom automations on your end when you receive webhook events from Volubile.
 
 ## Configure webhook
 
-Give the `Webhook URL` you want Volubile to notify to in [Integration Settings](https://eu.volubile.ai/settings/integration)
+Provide the `Webhook URL` where you want Volubile to send notifications in the [Integration Settings](https://eu.volubile.ai/settings/integration)
 
 ## Webhook payload
 
-Once your call complete or fails, a `POST` request will be sent to your `Webhook URL`with the detail of the completed call.
+Once a call is completed or fails, a `POST` request will be sent to your `Webhook URL` with the details of the call.
 
 ```json
 {
@@ -43,11 +43,11 @@ Once your call complete or fails, a `POST` request will be sent to your `Webhook
 
 ### Securing webhook
 
-You can choose to enable security on webhook in by generating a secret in [Integration Settings](https://eu.volubile.ai/settings/integration).
+You can choose to enable security for webhooks by generating a secret in the [Integration Settings](https://eu.volubile.ai/settings/integration).
 
-In this case we will send an `X-Webhook-Signature` in the request headers to your `Webhook URL` allowing you to check the payload came from Volubile.
+When enabled, we will include an `X-Webhook-Signature` in the request headers to your `Webhook URL` allowing you to verify that the payload originated from Volubile.
 
-See below for sample logic for how to verify `HMAC signature` :
+Below is sample code demonstrating how to verify the `HMAC signature` :
 
 <CodeGroup>
 
@@ -73,7 +73,7 @@ final var payload = """
 
 try {
     final var mac = Mac.getInstance("HmacSHA256");
-    mac.init(new SecretKeySpec(secret.getBytes(UTF_8), "HmacSHA256"));
+    mac.init(new SecretKeySpec(SECRET_KEY.getBytes(UTF_8), "HmacSHA256"));
     final byte[] rawHmac = mac.doFinal(payload.getBytes());
     final byte[] hexBytes = new Hex().encode(rawHmac);
 
@@ -84,7 +84,7 @@ try {
 }
 ```
 
-```typescript Typescript
+```typescript TypeScript
 const crypto = require("crypto");
 
 const SECRET_KEY = "{volubile-webhook-secret}";
