@@ -52,11 +52,12 @@ See below for sample logic for how to verify `HMAC signature` :
 <CodeGroup>
 
 ```java Java
-import org.apache.commons.codec.binary.Hex
-import java.security.InvalidKeyException
-import java.security.NoSuchAlgorithmException
-import javax.crypto.Mac
-import javax.crypto.spec.SecretKeySpec
+import org.apache.commons.codec.binary.Hex;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import static java.nio.charset.StandardCharsets.UTF_8;
 ...
 
 final var SECRET_KEY = "{volubile-webhook-secret}";
@@ -72,11 +73,11 @@ final var payload = """
 
 try {
     final var mac = Mac.getInstance("HmacSHA256");
-    mac.init(new SecretKeySpec(secret.getBytes(), "HmacSHA256"));
+    mac.init(new SecretKeySpec(secret.getBytes(UTF_8), "HmacSHA256"));
     final byte[] rawHmac = mac.doFinal(payload.getBytes());
     final byte[] hexBytes = new Hex().encode(rawHmac);
 
-    final var signature = String(hexBytes, UTF_8);
+    final var signature = new String(hexBytes, UTF_8);
     ...
 } catch (final NoSuchAlgorithmException | InvalidKeyException e) {
     logger.error("Error occurred!");
