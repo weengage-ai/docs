@@ -11,13 +11,56 @@
     }
   ],
   "paths": {
+    "/webhook": {
+      "post": {
+        "tags": [
+          "webhook-gateway"
+        ],
+        "operationId": "post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostCallEvent"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/v1/contacts": {
       "get": {
         "tags": [
           "Contact"
         ],
-        "summary": "List all contacts",
-        "operationId": "listContacts",
+        "summary": "List contacts",
+        "operationId": "list",
         "parameters": [
           {
             "name": "tag",
@@ -86,10 +129,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ContactResponse"
-                  }
+                  "$ref": "#/components/schemas/PageResponseContactResponse"
                 }
               }
             }
@@ -105,8 +145,8 @@
         "tags": [
           "Contact"
         ],
-        "summary": "Creates a new contact",
-        "operationId": "createContact",
+        "summary": "Create a contact",
+        "operationId": "create",
         "requestBody": {
           "content": {
             "application/json": {
@@ -147,26 +187,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
           }
         },
         "security": [
@@ -181,8 +201,8 @@
         "tags": [
           "Contact"
         ],
-        "summary": "Create Call by Lead ID",
-        "operationId": "createCallByContactId",
+        "summary": "Call a contact",
+        "operationId": "call",
         "parameters": [
           {
             "name": "contactId",
@@ -225,31 +245,8 @@
               }
             }
           },
-          "404": {
-            "description": "The contact with given Id was not found."
-          },
           "201": {
             "description": "Call created successfully"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
           },
           "404": {
             "description": "The contact with given Id was not found."
@@ -267,8 +264,8 @@
         "tags": [
           "Contact"
         ],
-        "summary": "Import multiple contacts in a single batch",
-        "operationId": "importContacts",
+        "summary": "Import a batch of contacts",
+        "operationId": "importBatch",
         "requestBody": {
           "content": {
             "application/json": {
@@ -312,26 +309,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
           }
         },
         "security": [
@@ -346,8 +323,8 @@
         "tags": [
           "Campaigns"
         ],
-        "summary": "Creates a new campaign",
-        "operationId": "create",
+        "summary": "Create a campaign",
+        "operationId": "create_1",
         "requestBody": {
           "content": {
             "application/json": {
@@ -402,8 +379,8 @@
         "tags": [
           "Call"
         ],
-        "summary": "List all calls",
-        "operationId": "listCalls",
+        "summary": "List calls",
+        "operationId": "list_1",
         "parameters": [
           {
             "name": "agentId",
@@ -496,12 +473,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json": {
+              "*/*": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CallResponse"
-                  }
+                  "$ref": "#/components/schemas/PageResponseCallResponse"
                 }
               }
             }
@@ -517,8 +491,8 @@
         "tags": [
           "Call"
         ],
-        "summary": "Creates a new call",
-        "operationId": "createCall",
+        "summary": "Create a call",
+        "operationId": "create_2",
         "requestBody": {
           "content": {
             "application/json": {
@@ -552,26 +526,6 @@
           },
           "201": {
             "description": "Call created successfully"
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
           }
         },
         "security": [
@@ -586,19 +540,18 @@
         "tags": [
           "Contact"
         ],
-        "summary": "Retrieve contact by ID",
-        "operationId": "contactById",
+        "summary": "Get contact",
+        "operationId": "get",
         "parameters": [
           {
             "name": "contactId",
             "in": "path",
-            "description": "ID of the contact to retrieve",
+            "description": "UUID of the contact",
             "required": true,
             "schema": {
               "type": "string",
               "format": "uuid"
-            },
-            "example": "05673a94-fc5a-43f2-af50-a8f687132d74"
+            }
           }
         ],
         "responses": {
@@ -633,7 +586,14 @@
             }
           },
           "404": {
-            "description": "The contact with given Id was not found"
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -646,8 +606,8 @@
         "tags": [
           "Contact"
         ],
-        "summary": "Updates a contact",
-        "operationId": "updateContact",
+        "summary": "Update a contact",
+        "operationId": "update",
         "parameters": [
           {
             "name": "contactId",
@@ -691,35 +651,12 @@
               }
             }
           },
-          "404": {
-            "description": "The contact with given Id was not found."
-          },
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ContactResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -740,8 +677,8 @@
         "tags": [
           "Campaigns"
         ],
-        "summary": "Retrieve campaign by ID",
-        "operationId": "campaignById",
+        "summary": "Get a campaign",
+        "operationId": "get_1",
         "parameters": [
           {
             "name": "campaignId",
@@ -774,9 +711,6 @@
               }
             }
           },
-          "404": {
-            "description": "The campaign with given Id was not found."
-          },
           "200": {
             "description": "OK",
             "content": {
@@ -786,6 +720,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The campaign with given Id was not found."
           }
         },
         "security": [
@@ -800,8 +737,8 @@
         "tags": [
           "Call"
         ],
-        "summary": "Retrieve call by ID",
-        "operationId": "callById",
+        "summary": "Get a call",
+        "operationId": "get_2",
         "parameters": [
           {
             "name": "callId",
@@ -836,6 +773,9 @@
               }
             }
           },
+          "404": {
+            "description": "The call with given Id was not found"
+          },
           "200": {
             "description": "OK",
             "content": {
@@ -845,29 +785,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "The call with given Id was not found"
           }
         },
         "security": [
@@ -931,6 +848,19 @@
           }
         },
         "description": "List of specific validation errors"
+      },
+      "PostCallEvent": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "callId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
       },
       "CreateContactRequest": {
         "required": [
@@ -1202,32 +1132,30 @@
           }
         }
       },
-      "ContactSearchParams": {
+      "PageResponseContactResponse": {
         "type": "object",
         "properties": {
-          "tag": {
-            "type": "string"
-          }
-        }
-      },
-      "CallSearchParams": {
-        "type": "object",
-        "properties": {
-          "agentId": {
-            "type": "string",
-            "format": "uuid"
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContactResponse"
+            }
           },
-          "campaignId": {
-            "type": "string",
-            "format": "uuid"
+          "size": {
+            "type": "integer",
+            "format": "int32"
           },
-          "startDate": {
-            "type": "string",
-            "format": "date"
+          "number": {
+            "type": "integer",
+            "format": "int32"
           },
-          "endDate": {
-            "type": "string",
-            "format": "date"
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -1343,6 +1271,33 @@
             "description": "Timestamp when the call record was created",
             "format": "date-time",
             "example": "2024-07-30T14:45:00Z"
+          }
+        }
+      },
+      "PageResponseCallResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CallResponse"
+            }
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       }
